@@ -2,14 +2,23 @@
  * @Author: Orlando
  * @Date: 2022-02-17 17:12:44
  * @LastEditors: Orlando
- * @LastEditTime: 2022-02-18 11:03:07
+ * @LastEditTime: 2022-02-18 13:34:35
  * @Description:
  */
 
 import initState from './initState.js';
+// import initComputed from './initComputed.js'
+// import initWatch from './initWatch'
+import Watcher from './Watcher.js';
 
 export default function Vue(options) {
+  //初始化
   this._init(options);
+
+  //渲染
+  if (options.el) {
+    this.$mount(options.el);
+  }
 }
 
 Vue.prototype._init = function (options) {
@@ -17,4 +26,10 @@ Vue.prototype._init = function (options) {
   this.$options = options;
 
   initState(vm);
+};
+
+Vue.prototype.$mount = function (el) {
+  const vm = this;
+
+  new Watcher(vm, vm.$options.render, () => {}, true);
 };

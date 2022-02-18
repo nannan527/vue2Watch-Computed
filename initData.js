@@ -2,15 +2,19 @@
  * @Author: Orlando
  * @Date: 2022-02-18 10:47:25
  * @LastEditors: Orlando
- * @LastEditTime: 2022-02-18 11:48:34
- * @Description:
+ * @LastEditTime: 2022-02-18 13:09:59
+ * @Description:data 加上响应式
  */
+
+import { Dep } from './dep.js';
 
 export default function initData(vm) {
   let data = vm.$options.data;
 
+  //data 为 函数 or 对象
   data = typeof data === 'function' ? data.call(vm) : data || {};
 
+  // 挂到 vm 实例上
   vm._data = data;
 
   for (let key in data) {
@@ -37,6 +41,9 @@ class Observer {
   constructor(data) {
     Object.defineProperty(data, '__ob__', {
       value: this,
+      enumerable: false, //不可被枚举
+      writable: true, //可用赋值运算符改写__ob__
+      configurable: true, // 可改写可删除
     });
 
     if (Array.isArray(data)) {
@@ -77,14 +84,26 @@ function defineReactive(target, key, val) {
   //递归一下，对象中可能还有下一级
   observe(val);
 
+  //每个对象有一个自己的dep
+  const dep = new Dep();
+
   //设置响应
   Object.defineProperty(target, key, {
     get() {
+      if (Dep.target) {
+        // 如果Dep.target指向某个Watcher，则把此Watcher收入此dep的队列里
+        dep.depend();
+      }
+
       return val;
     },
     set(newVal) {
       if (val === newVal) return;
       val = newVal;
+      // 新设置的值也需要响应式判断处理
+      observe(newVal);
+      // 通知dep里的所有Wacther进行传达更新
+      dep.notify();
     },
   });
 }
