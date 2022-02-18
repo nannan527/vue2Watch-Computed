@@ -2,7 +2,7 @@
  * @Author: Orlando
  * @Date: 2022-02-17 17:04:27
  * @LastEditors: Orlando
- * @LastEditTime: 2022-02-18 13:41:08
+ * @LastEditTime: 2022-02-18 14:12:56
  * @Description:
  */
 
@@ -16,8 +16,14 @@ let vue = new Vue({
       age: '999',
     };
   },
+  computed: {
+    // 新增
+    info() {
+      return this.name + this.age;
+    },
+  },
   render() {
-    document.querySelector('#root').innerHTML = `${this.name}今年${this.age}岁了`;
+    document.querySelector('#root').innerHTML = `${this.name}今年${this.age}岁了 ------ ${this.info}`;
   },
 });
 

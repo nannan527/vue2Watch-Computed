@@ -2,9 +2,11 @@
  * @Author: Orlando
  * @Date: 2022-02-18 13:25:03
  * @LastEditors: Orlando
- * @LastEditTime: 2022-02-18 13:48:38
+ * @LastEditTime: 2022-02-18 14:46:32
  * @Description:
  */
+
+import { pushTarget, popTarget } from './dep.js';
 
 let wid = 0;
 
@@ -18,13 +20,50 @@ export default class Watcher {
       this.getter = exprOrFn;
     }
 
+    if (options) {
+      this.lazy = options.lazy;
+    } else {
+      this.lazy = false;
+    }
+    this.dirty = this.lazy;
     this.cb = cb;
     this.options = options;
     this.id = wid++;
-    this.value = this.get();
+    this.deps = [];
+    this.depsId = new Set();
+    this.value = this.lazy ? undefined : this.get();
   }
   get() {
-    let value = this.getter.call(this.vm);
+    const vm = this.vm;
+    pushTarget(this);
+    let value = this.getter.call(vm);
+    popTarget();
     return value;
+  }
+  addDep(dep) {
+    let id = dep.id;
+    if (!this.depsId.has(id)) {
+      this.depsId.add(id);
+      this.deps.push(dep);
+      dep.addSub(this);
+    }
+  }
+  update() {
+    if (this.lazy) {
+      this.dirty = true;
+    } else {
+      this.get();
+    }
+  }
+  // 执行get，并且 this.dirty = false
+  evaluate() {
+    this.value = this.get();
+    this.dirty = false;
+  }
+  depend() {
+    let i = this.deps.length;
+    while (i--) {
+      this.deps[i].depend();
+    }
   }
 }
