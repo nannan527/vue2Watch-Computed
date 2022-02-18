@@ -2,7 +2,7 @@
  * @Author: Orlando
  * @Date: 2022-02-18 13:25:03
  * @LastEditors: Orlando
- * @LastEditTime: 2022-02-18 14:51:25
+ * @LastEditTime: 2022-02-18 15:30:21
  * @Description:
  */
 
@@ -20,14 +20,13 @@ export default class Watcher {
       this.getter = exprOrFn;
     }
 
-    if (options) {
-      this.lazy = options.lazy;
-    } else {
-      this.lazy = false;
-    }
-    this.dirty = this.lazy;
     this.cb = cb;
     this.options = options;
+
+    // 计算属性 是否 缓冲 标志
+    this.lazy = options && options.lazy ? options.lazy : false;
+    this.dirty = this.lazy;
+
     this.id = wid++;
     this.deps = [];
     this.depsId = new Set();

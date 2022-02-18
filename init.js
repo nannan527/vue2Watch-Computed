@@ -2,7 +2,7 @@
  * @Author: Orlando
  * @Date: 2022-02-17 17:12:44
  * @LastEditors: Orlando
- * @LastEditTime: 2022-02-18 15:21:45
+ * @LastEditTime: 2022-02-18 15:41:25
  * @Description:
  */
 
@@ -32,9 +32,4 @@ Vue.prototype.$mount = function (el) {
   new Watcher(vm, vm.$options.render, () => {});
 
   //vm.$options.render.call(vm);
-
-  setTimeout(() => {
-    this.name = '迈克尔';
-    //vm.$options.render.call(vm);
-  }, 3000);
 };
