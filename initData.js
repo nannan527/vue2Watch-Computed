@@ -2,7 +2,7 @@
  * @Author: Orlando
  * @Date: 2022-02-18 10:47:25
  * @LastEditors: Orlando
- * @LastEditTime: 2022-02-18 15:47:57
+ * @LastEditTime: 2022-02-18 16:42:03
  * @Description:data 加上响应式
  */
 
@@ -86,13 +86,14 @@ function defineReactive(target, key, val) {
 
   //每个对象有一个自己的dep
   const dep = new Dep();
-
   console.log(dep);
   //设置响应
   Object.defineProperty(target, key, {
     get() {
       if (Dep.target) {
         // 如果Dep.target指向某个Watcher，则把此Watcher收入此dep的队列里
+        // Wacther 收集 dep 进 Wacther.deps; 收集 dep.id 进 Wacther.depsId;
+        // dep 收集 wacther 进 dep.subs
         dep.depend();
       }
 

@@ -2,7 +2,7 @@
  * @Author: Orlando
  * @Date: 2022-02-18 13:03:57
  * @LastEditors: Orlando
- * @LastEditTime: 2022-02-18 15:57:13
+ * @LastEditTime: 2022-02-18 16:39:24
  * @Description:dep函数  用于通知 watcher
  */
 
@@ -15,22 +15,28 @@ export class Dep {
     //用来存watcher
     this.subs = [];
   }
-
+  //Wacther 收集 dep
   depend() {
     if (Dep.target) {
-      // 此时Dep.target指向的是某个Wacther，Wacther也要把此dep给收集起来
+      //   this.depsId.add(id);
+      //   this.deps.push(dep);
+      //   dep.addSub(this);
+
+      // 此时Dep.target指向的是某个Wacther
+      // Wacther 收集 dep 进 Wacther.deps; 收集 dep.id 进 Wacther.depsId;
+      // dep 收集 wacther 进 dep.subs
       Dep.target.addDep(this);
     }
-  }
-
-  notify() {
-    const tempSubs = this.subs.slice();
-    tempSubs.reverse().forEach((watcher) => watcher.update());
   }
 
   addSub(watcher) {
     // 将Watcher收进subs里
     this.subs.push(watcher);
+  }
+
+  notify() {
+    const tempSubs = this.subs.slice();
+    tempSubs.reverse().forEach((watcher) => watcher.update());
   }
 }
 

@@ -2,7 +2,7 @@
  * @Author: Orlando
  * @Date: 2022-02-18 14:14:08
  * @LastEditors: Orlando
- * @LastEditTime: 2022-02-18 14:40:10
+ * @LastEditTime: 2022-02-18 17:03:39
  * @Description:
  */
 import { Dep } from './dep.js';
@@ -36,6 +36,7 @@ function defineComputed(vm, key, userDef) {
     getter = userDef.get;
   }
 
+  // 代理到 vm上
   Object.defineProperty(vm, key, {
     enumerable: true,
     configurable: true,
@@ -49,7 +50,7 @@ function createComputedGetter(key) {
   return function computedGetter() {
     let watcher = this._computedWatchers[key];
     if (watcher) {
-      // 给computed的属性添加订阅watchers
+      //watcher.dirty = true 为 computed 属性 添加订阅 watchers
       if (watcher.dirty) {
         watcher.evaluate();
       }

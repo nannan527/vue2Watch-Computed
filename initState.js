@@ -2,12 +2,12 @@
  * @Author: Orlando
  * @Date: 2022-02-18 10:47:25
  * @LastEditors: Orlando
- * @LastEditTime: 2022-02-18 14:18:45
+ * @LastEditTime: 2022-02-18 16:54:03
  * @Description:
  */
 import initData from './initData.js';
 import initComputed from './initComputed.js';
-// import initWatch from './initWatch'
+import initWatch from './initWatch.js';
 
 export default function initState(vm) {
   let opt = vm.$options;
@@ -19,5 +19,10 @@ export default function initState(vm) {
   //初始化 computed
   if (opt.computed) {
     initComputed(vm);
+  }
+
+  // 初始化watch
+  if (opt.watch) {
+    //initWatch(vm);
   }
 }
