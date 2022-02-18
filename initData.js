@@ -2,7 +2,7 @@
  * @Author: Orlando
  * @Date: 2022-02-18 10:47:25
  * @LastEditors: Orlando
- * @LastEditTime: 2022-02-18 11:25:11
+ * @LastEditTime: 2022-02-18 11:48:34
  * @Description:
  */
 
@@ -78,13 +78,13 @@ function defineReactive(target, key, val) {
   observe(val);
 
   //设置响应
-  Object.defineProperty(traget, key, {
+  Object.defineProperty(target, key, {
     get() {
-      return traget[key];
+      return val;
     },
     set(newVal) {
       if (val === newVal) return;
-      return (traget[key] = newVal);
+      val = newVal;
     },
   });
 }
