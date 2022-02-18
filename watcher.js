@@ -2,7 +2,7 @@
  * @Author: Orlando
  * @Date: 2022-02-18 13:25:03
  * @LastEditors: Orlando
- * @LastEditTime: 2022-02-18 14:46:32
+ * @LastEditTime: 2022-02-18 14:51:25
  * @Description:
  */
 
@@ -12,7 +12,7 @@ let wid = 0;
 
 export default class Watcher {
   constructor(vm, exprOrFn, cb, options) {
-    // vm挂到当前this上
+    // vm挂到当前watcher实例上
     this.vm = vm;
 
     if (typeof exprOrFn === 'function') {
