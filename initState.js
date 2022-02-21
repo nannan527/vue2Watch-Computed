@@ -2,7 +2,7 @@
  * @Author: Orlando
  * @Date: 2022-02-18 10:47:25
  * @LastEditors: Orlando
- * @LastEditTime: 2022-02-18 16:54:03
+ * @LastEditTime: 2022-02-21 09:01:13
  * @Description:
  */
 import initData from './initData.js';
@@ -23,6 +23,6 @@ export default function initState(vm) {
 
   // 初始化watch
   if (opt.watch) {
-    //initWatch(vm);
+    initWatch(vm);
   }
 }

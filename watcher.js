@@ -2,13 +2,24 @@
  * @Author: Orlando
  * @Date: 2022-02-18 13:25:03
  * @LastEditors: Orlando
- * @LastEditTime: 2022-02-18 17:02:38
+ * @LastEditTime: 2022-02-21 10:50:20
  * @Description:
  */
 
 import { pushTarget, popTarget } from './dep.js';
 
 let wid = 0;
+
+function parsePath(path) {
+  const segments = path.split('.');
+  return function (obj) {
+    for (let i = 0; i < segments.length; i++) {
+      if (!obj) return;
+      obj = obj[segments[i]];
+    }
+    return obj;
+  };
+}
 
 export default class Watcher {
   constructor(vm, exprOrFn, cb, options) {
@@ -18,14 +29,21 @@ export default class Watcher {
     if (typeof exprOrFn === 'function') {
       // 把exprOrFn挂载到当前的this上，这里exprOrFn = vm.$options.render
       this.getter = exprOrFn;
+    } else {
+      this.getter = parsePath(exprOrFn); // user watcher
     }
+
+    if (options) {
+      this.lazy = !!options.lazy; // 为computed 设计的
+      this.user = !!options.user; // 为user wather设计的
+    } else {
+      this.user = this.lazy = false;
+    }
+
+    this.dirty = this.lazy;
 
     this.cb = cb;
     this.options = options;
-
-    // lazy 为 true 为计算属性
-    this.lazy = options && options.lazy ? options.lazy : false;
-    this.dirty = this.lazy;
 
     this.id = wid++;
     this.depsId = new Set();
@@ -36,7 +54,7 @@ export default class Watcher {
   get() {
     const vm = this.vm;
     pushTarget(this);
-    let value = this.getter.call(vm);
+    let value = this.getter.call(vm, vm);
     popTarget();
     return value;
   }
@@ -44,7 +62,7 @@ export default class Watcher {
     if (this.lazy) {
       this.dirty = true;
     } else {
-      this.get();
+      this.run();
     }
   }
   // lazy 是 true 的情况重新计算
@@ -65,6 +83,22 @@ export default class Watcher {
     let i = this.deps.length;
     while (i--) {
       this.deps[i].depend();
+    }
+  }
+  run() {
+    const value = this.get();
+    const oldValue = this.value;
+    this.value = value;
+
+    //执行cb
+    if (this.user) {
+      try {
+        this.cb.call(this.vm, value, oldValue);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      this.cb && this.cb.call(this.vm, oldValue, value);
     }
   }
 }

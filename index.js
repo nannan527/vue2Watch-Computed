@@ -2,7 +2,7 @@
  * @Author: Orlando
  * @Date: 2022-02-17 17:04:27
  * @LastEditors: Orlando
- * @LastEditTime: 2022-02-18 16:51:17
+ * @LastEditTime: 2022-02-21 10:50:47
  * @Description:
  */
 
@@ -22,11 +22,11 @@ let vue = new Vue({
     },
   },
   watch: {
-    name(oldValue, newValue) {
-      console.log('触发watch', oldValue, newValue);
+    name(newValue, oldValue) {
+      console.log('触发watch', newValue, oldValue);
     },
-    age(oldValue, newValue) {
-      console.log('触发watch', oldValue, newValue);
+    age(newValue, oldValue) {
+      console.log('触发watch', newValue, oldValue);
     },
   },
   render() {
