@@ -2,7 +2,7 @@
  * @Author: Orlando
  * @Date: 2022-02-18 13:25:03
  * @LastEditors: Orlando
- * @LastEditTime: 2022-02-21 10:50:20
+ * @LastEditTime: 2022-02-21 15:08:49
  * @Description:
  */
 
@@ -30,7 +30,7 @@ export default class Watcher {
       // 把exprOrFn挂载到当前的this上，这里exprOrFn = vm.$options.render
       this.getter = exprOrFn;
     } else {
-      this.getter = parsePath(exprOrFn); // user watcher
+      this.getter = parsePath(exprOrFn); // user watcher () exprOrFn = 'name'
     }
 
     if (options) {
@@ -74,8 +74,10 @@ export default class Watcher {
   addDep(dep) {
     let id = dep.id;
     if (!this.depsId.has(id)) {
+      // watcher里装入Dep
       this.depsId.add(id);
       this.deps.push(dep);
+      //dep里装入watcher
       dep.addSub(this);
     }
   }
